@@ -250,8 +250,8 @@ const PaymentAddress = ({ className }: { className?: string }) => {
   return (
     <TextField
       {...field}
-      label="Where do you want to receive the funds?"
-      placeholder="Enter an ENS name or ETH address"
+      disabled={true}
+      label="Invoice will be paid to the Copra Request Verifier contract"
       fullWidth
       className={className}
       error={Boolean(meta.error)}
@@ -410,7 +410,7 @@ export const CreateRequestForm = ({
           amount: "" as any,
           payer: "",
           reason: "",
-          paymentAddress: account,
+          paymentAddress: process.env.REACT_APP_COPRA_REQUEST_VERIFIER,
         }}
       >
         <>
