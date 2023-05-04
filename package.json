@@ -2,8 +2,7 @@
   "name": "request-apps",
   "private": true,
   "workspaces": [
-    "packages/*",
-    "apps/*"
+    "packages/*"
   ],
   "scripts": {
     "start:pay": "yarn --cwd packages/pay start",
