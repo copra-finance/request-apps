@@ -13,3 +13,16 @@ index 16334aa..42ee7f6 100644
      return {
          data: encodedTx,
          to: proxyAddress,
+diff --git a/node_modules/@requestnetwork/payment-processor/dist/payment/erc20.js b/node_modules/@requestnetwork/payment-processor/dist/payment/erc20.js
+index 35b0cc3..ec08c98 100644
+--- a/node_modules/@requestnetwork/payment-processor/dist/payment/erc20.js
++++ b/node_modules/@requestnetwork/payment-processor/dist/payment/erc20.js
+@@ -208,7 +208,7 @@ function getProxyAddress(request) {
+         return (0, utils_1.getProxyAddress)(request, payment_detection_1.Erc20PaymentNetwork.ERC20ProxyPaymentDetector.getDeploymentInformation);
+     }
+     if (id === types_2.ExtensionTypes.ID.PAYMENT_NETWORK_ERC20_FEE_PROXY_CONTRACT) {
+-        return (0, utils_1.getProxyAddress)(request, payment_detection_1.Erc20PaymentNetwork.ERC20FeeProxyPaymentDetector.getDeploymentInformation);
++        return process.env.REACT_APP_COPRA_REQUEST_PAYMENT_PROCESSOR;
+     }
+     throw new Error(`Unsupported payment network: ${id}`);
+ }

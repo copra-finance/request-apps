@@ -221,9 +221,7 @@ export const PaymentProvider: React.FC = ({ children }) => {
     if (active) return;
     setActive(true);
 
-    payRequest(request.raw, library as any, undefined, {
-      gasLimit: 100000,
-    })
+    payRequest(request.raw, library as any, undefined)
       .then(txCallback)
       .catch((e) => {
         setPaying(false);
