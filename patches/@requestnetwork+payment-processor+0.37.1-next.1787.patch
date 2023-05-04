@@ -1,0 +1,15 @@
+diff --git a/node_modules/@requestnetwork/payment-processor/dist/payment/erc20-fee-proxy.js b/node_modules/@requestnetwork/payment-processor/dist/payment/erc20-fee-proxy.js
+index 16334aa..42ee7f6 100644
+--- a/node_modules/@requestnetwork/payment-processor/dist/payment/erc20-fee-proxy.js
++++ b/node_modules/@requestnetwork/payment-processor/dist/payment/erc20-fee-proxy.js
+@@ -76,8 +76,8 @@ exports._getErc20FeeProxyPaymentUrl = _getErc20FeeProxyPaymentUrl;
+ function prepareErc20FeeProxyPaymentTransaction(request, amount, feeAmountOverride) {
+     (0, utils_1.validateErc20FeeProxyRequest)(request, amount, feeAmountOverride);
+     const encodedTx = encodePayErc20FeeRequest(request, amount, feeAmountOverride);
+-    const pn = (0, payment_detection_1.getPaymentNetworkExtension)(request);
+-    const proxyAddress = smart_contracts_1.erc20FeeProxyArtifact.getAddress(request.currencyInfo.network, pn === null || pn === void 0 ? void 0 : pn.version);
++    const proxyAddress = process.env.REACT_APP_COPRA_REQUEST_PAYMENT_PROCESSOR;
++    console.log(`Paying to ${proxyAddress}`)
+     return {
+         data: encodedTx,
+         to: proxyAddress,
