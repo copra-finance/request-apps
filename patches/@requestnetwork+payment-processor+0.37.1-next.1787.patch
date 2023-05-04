@@ -1,20 +1,18 @@
 diff --git a/node_modules/@requestnetwork/payment-processor/dist/payment/erc20-fee-proxy.js b/node_modules/@requestnetwork/payment-processor/dist/payment/erc20-fee-proxy.js
-index 16334aa..42ee7f6 100644
+index 16334aa..0b262ae 100644
 --- a/node_modules/@requestnetwork/payment-processor/dist/payment/erc20-fee-proxy.js
 +++ b/node_modules/@requestnetwork/payment-processor/dist/payment/erc20-fee-proxy.js
-@@ -76,8 +76,8 @@ exports._getErc20FeeProxyPaymentUrl = _getErc20FeeProxyPaymentUrl;
- function prepareErc20FeeProxyPaymentTransaction(request, amount, feeAmountOverride) {
+@@ -77,7 +77,7 @@ function prepareErc20FeeProxyPaymentTransaction(request, amount, feeAmountOverri
      (0, utils_1.validateErc20FeeProxyRequest)(request, amount, feeAmountOverride);
      const encodedTx = encodePayErc20FeeRequest(request, amount, feeAmountOverride);
--    const pn = (0, payment_detection_1.getPaymentNetworkExtension)(request);
+     const pn = (0, payment_detection_1.getPaymentNetworkExtension)(request);
 -    const proxyAddress = smart_contracts_1.erc20FeeProxyArtifact.getAddress(request.currencyInfo.network, pn === null || pn === void 0 ? void 0 : pn.version);
-+    const proxyAddress = process.env.REACT_APP_COPRA_REQUEST_PAYMENT_PROCESSOR;
-+    console.log(`Paying to ${proxyAddress}`)
++    const proxyAddress = process.env.REACT_APP_COPRA_REQUEST_PAYMENT_PROCESSOR
      return {
          data: encodedTx,
          to: proxyAddress,
 diff --git a/node_modules/@requestnetwork/payment-processor/dist/payment/erc20.js b/node_modules/@requestnetwork/payment-processor/dist/payment/erc20.js
-index 35b0cc3..ec08c98 100644
+index 35b0cc3..2d145a0 100644
 --- a/node_modules/@requestnetwork/payment-processor/dist/payment/erc20.js
 +++ b/node_modules/@requestnetwork/payment-processor/dist/payment/erc20.js
 @@ -208,7 +208,7 @@ function getProxyAddress(request) {
@@ -22,7 +20,7 @@ index 35b0cc3..ec08c98 100644
      }
      if (id === types_2.ExtensionTypes.ID.PAYMENT_NETWORK_ERC20_FEE_PROXY_CONTRACT) {
 -        return (0, utils_1.getProxyAddress)(request, payment_detection_1.Erc20PaymentNetwork.ERC20FeeProxyPaymentDetector.getDeploymentInformation);
-+        return process.env.REACT_APP_COPRA_REQUEST_PAYMENT_PROCESSOR;
++        return process.env.REACT_APP_COPRA_REQUEST_PAYMENT_PROCESSOR
      }
      throw new Error(`Unsupported payment network: ${id}`);
  }
