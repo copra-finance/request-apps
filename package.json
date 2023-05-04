@@ -1,14 +1,9 @@
 {
   "name": "request-apps",
   "private": true,
-  "workspaces": {
-    "packages": [
-      "packages/shared",
-      "packages/request-ui",
-      "packages/create",
-      "packages/pay"
-    ]
-  },
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
     "start:pay": "yarn --cwd packages/pay start",
     "start:create": "yarn --cwd packages/create start",
