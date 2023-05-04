@@ -262,7 +262,7 @@ const PaymentAddress = ({ className }: { className?: string }) => {
 
 const Body = () => {
   const classes = useBodyStyles();
-  const [advancedOpen, setAdvancedOpen] = React.useState(false);
+
   return (
     <Box className={classes.container}>
       <Box display="flex" flexDirection="row">
@@ -277,24 +277,9 @@ const Body = () => {
       <Payer className={classes.field} />
       <Reason className={classes.field} />
       <Box>
-        <Button
-          variant="text"
-          className={classes.advancedButton}
-          classes={{ label: classes.advancedButtonLabel }}
-          onClick={() => setAdvancedOpen(!advancedOpen)}
-        >
-          {advancedOpen ? (
-            <ExpandMoreIcon fontSize="small" />
-          ) : (
-            <ChevronRightIcon fontSize="small" />
-          )}{" "}
-          <Typography variant="body1">Advanced</Typography>
-        </Button>
-        {advancedOpen && (
-          <Box mt={2}>
-            <PaymentAddress className={classes.field} />
-          </Box>
-        )}
+        <Box mt={2}>
+          <PaymentAddress className={classes.field} />
+        </Box>
       </Box>
     </Box>
   );

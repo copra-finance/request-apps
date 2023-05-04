@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { makeStyles, Typography } from "@material-ui/core";
+import { Link, makeStyles, Typography } from "@material-ui/core";
 import { useWeb3React } from "@web3-react/core";
 import {
   RContainer,
@@ -54,6 +54,7 @@ const RequestActions = ({
     await cancel();
     setCancelling(false);
   };
+
   const classes = useStyles();
   account = account?.toLowerCase();
   if (
@@ -61,6 +62,17 @@ const RequestActions = ({
     account &&
     [request.payer, request.payee].includes(account)
   ) {
+    if (account === request.payee) {
+      return (
+        <RButton
+          color="default"
+          target="_blank"
+          href={process.env.REACT_APP_COPRA_APP_URL}
+        >
+          <Typography variant="h4">Factorize Invoice on Copra</Typography>
+        </RButton>
+      );
+    }
     return (
       <RButton
         color="default"
@@ -80,13 +92,8 @@ const RequestActions = ({
 const RequestPageInner = () => {
   const { account, chainId } = useWeb3React();
 
-  const {
-    request,
-    loading,
-    update,
-    counterCurrency,
-    counterValue,
-  } = useRequest();
+  const { request, loading, update, counterCurrency, counterValue } =
+    useRequest();
 
   const cancel = async () => {
     if (!request || !account || !chainId) {

@@ -5,13 +5,14 @@ import {
   TextField,
   Box,
   Button,
+  Link,
 } from "@material-ui/core";
 import { useClipboard } from "use-clipboard-copy";
 
 import { Spacer } from "request-ui";
 import { getPayUrl } from "request-shared";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   wrapper: {
     height: 48,
   },
@@ -59,9 +60,11 @@ const ShareRequest = ({ requestId }: { requestId: string }) => {
   });
 
   const url = getPayUrl(requestId);
+
   return (
     <>
       <Typography variant="h5">Share Request</Typography>
+
       <Spacer size={3} />
       <Box display="flex" className={classes.wrapper}>
         <TextField
