@@ -395,7 +395,7 @@ export const CreateRequestForm = ({
           amount: "" as any,
           payer: "",
           reason: "",
-          paymentAddress: process.env.REACT_APP_COPRA_REQUEST_VERIFIER,
+          paymentAddress: process.env.REACT_APP_COPRA_REQUEST_PAYMENT_PROCESSOR,
         }}
       >
         <>
