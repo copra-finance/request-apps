@@ -251,7 +251,7 @@ const PaymentAddress = ({ className }: { className?: string }) => {
     <TextField
       {...field}
       disabled={true}
-      label="Invoice will be paid to the Copra Request Verifier contract"
+      label="Invoice will be paid to the Copra Request Payment Processor"
       fullWidth
       className={className}
       error={Boolean(meta.error)}
