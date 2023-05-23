@@ -22,11 +22,15 @@ import ShareRequest from "../components/ShareRequest";
 import ErrorPage from "./ErrorPage";
 import { useConnectedUser } from "../contexts/UserContext";
 import NotLoggedPage from "./NotLoggedPage";
+import { ethers } from "ethers";
 
 const useStyles = makeStyles(() => ({
   cancel: {
     color: "#DE1C22",
     border: "1px solid #E4E4E4",
+  },
+  factorizeButton: {
+    marginTop: 15,
   },
 }));
 
@@ -62,17 +66,6 @@ const RequestActions = ({
     account &&
     [request.payer, request.payee].includes(account)
   ) {
-    if (account === request.payee) {
-      return (
-        <RButton
-          color="default"
-          target="_blank"
-          href={process.env.REACT_APP_COPRA_APP_URL}
-        >
-          <Typography variant="h4">Factorize Invoice on Copra</Typography>
-        </RButton>
-      );
-    }
     return (
       <RButton
         color="default"
@@ -94,6 +87,8 @@ const RequestPageInner = () => {
 
   const { request, loading, update, counterCurrency, counterValue } =
     useRequest();
+
+  const classes = useStyles();
 
   const cancel = async () => {
     if (!request || !account || !chainId) {
@@ -121,6 +116,7 @@ const RequestPageInner = () => {
   if (!request) {
     return <RequestNotFound />;
   }
+
   return (
     <RContainer>
       <Spacer size={15} xs={8} />
@@ -156,11 +152,23 @@ const RequestPageInner = () => {
           <ShareRequest requestId={request.requestId} />
         </>
       ) : (
-        <>
+        <React.Fragment>
           <ShareRequest requestId={request.requestId} />
           <Spacer size={11} />
           <RequestActions request={request} account={account} cancel={cancel} />
-        </>
+          {!!account &&
+            ethers.utils.getAddress(account) ===
+              ethers.utils.getAddress(request.payee) && (
+              <RButton
+                color="default"
+                target="_blank"
+                href={process.env.REACT_APP_COPRA_APP_URL}
+                className={classes.factorizeButton}
+              >
+                <Typography variant="h4">Factorize Invoice on Copra</Typography>
+              </RButton>
+            )}
+        </React.Fragment>
       )}
       <Spacer size={12} />
     </RContainer>
