@@ -1,5 +1,4 @@
 import {
-  payRequest,
   getErc20Balance,
   hasErc20Approval,
   approveErc20,
@@ -14,6 +13,7 @@ import { Types } from "@requestnetwork/request-client.js";
 import React from "react";
 import { ethers, BigNumber } from "ethers";
 import axios from "axios";
+import { getRequestPaymentValues } from "@requestnetwork/payment-processor/dist/payment/utils";
 
 export class NotEnoughForGasError extends Error {
   constructor() {
@@ -221,7 +221,58 @@ export const PaymentProvider: React.FC = ({ children }) => {
     if (active) return;
     setActive(true);
 
-    payRequest(request.raw, library as any, undefined)
+    const payRequest = async () => {
+      if (!window.ethereum) return;
+
+      const ABI = [
+        {
+          inputs: [
+            { internalType: "address", name: "tokenAddress", type: "address" },
+            { internalType: "address", name: "", type: "address" },
+            { internalType: "uint256", name: "amount", type: "uint256" },
+            { internalType: "bytes", name: "paymentReference", type: "bytes" },
+            { internalType: "uint256", name: "", type: "uint256" },
+            { internalType: "address", name: "", type: "address" },
+          ],
+          name: "transferFromWithReferenceAndFee",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+      ];
+
+      const paymentProcessorAddress =
+        process.env.REACT_APP_COPRA_REQUEST_PAYMENT_PROCESSOR;
+
+      if (!paymentProcessorAddress)
+        throw new Error(`Payment Process Address not set`);
+
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const user = provider.getSigner();
+      const paymentProcessor = new ethers.Contract(
+        paymentProcessorAddress,
+        ABI,
+        user
+      );
+
+      const { paymentReference, paymentAddress, feeAddress, feeAmount } =
+        getRequestPaymentValues(request.raw);
+
+      const feeToPay = ethers.BigNumber.from(feeAmount || 0);
+
+      console.log(paymentReference);
+      console.log(paymentAddress);
+      console.log(feeAddress);
+      console.log(feeAmount);
+      await paymentProcessor.transferWithReferenceAndFee(
+        paymentAddress,
+        `0x${paymentReference}`,
+        feeToPay,
+        feeAddress
+      );
+    };
+
+    payRequest()
       .then(txCallback)
       .catch((e) => {
         setPaying(false);
