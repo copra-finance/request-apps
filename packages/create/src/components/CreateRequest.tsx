@@ -251,7 +251,7 @@ const PaymentAddress = ({ className }: { className?: string }) => {
     <TextField
       {...field}
       disabled={true}
-      label="Invoice will be paid to the Copra Request Payment Processor"
+      label="Invoice will be paid to the Copra Request Income Verifier"
       fullWidth
       className={className}
       error={Boolean(meta.error)}
@@ -395,7 +395,7 @@ export const CreateRequestForm = ({
           amount: "" as any,
           payer: "",
           reason: "",
-          paymentAddress: process.env.REACT_APP_COPRA_REQUEST_PAYMENT_PROCESSOR,
+          paymentAddress: process.env.REACT_APP_COPRA_REQUEST_VERIFIER,
         }}
       >
         <>
