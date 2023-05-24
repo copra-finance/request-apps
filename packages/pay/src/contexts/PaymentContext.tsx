@@ -260,11 +260,7 @@ export const PaymentProvider: React.FC = ({ children }) => {
 
       const feeToPay = ethers.BigNumber.from(feeAmount || 0);
 
-      console.log(paymentReference);
-      console.log(paymentAddress);
-      console.log(feeAddress);
-      console.log(feeAmount);
-      await paymentProcessor.transferWithReferenceAndFee(
+      await paymentProcessor.transferFromWithReferenceAndFee(
         paymentAddress,
         `0x${paymentReference}`,
         feeToPay,
