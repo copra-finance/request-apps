@@ -1,14 +1,13 @@
-diff --git a/node_modules/@requestnetwork/payment-processor/dist/payment/erc20-fee-proxy.js b/node_modules/@requestnetwork/payment-processor/dist/payment/erc20-fee-proxy.js
-index 16334aa..79162a0 100644
---- a/node_modules/@requestnetwork/payment-processor/dist/payment/erc20-fee-proxy.js
-+++ b/node_modules/@requestnetwork/payment-processor/dist/payment/erc20-fee-proxy.js
-@@ -76,8 +76,7 @@ exports._getErc20FeeProxyPaymentUrl = _getErc20FeeProxyPaymentUrl;
- function prepareErc20FeeProxyPaymentTransaction(request, amount, feeAmountOverride) {
-     (0, utils_1.validateErc20FeeProxyRequest)(request, amount, feeAmountOverride);
-     const encodedTx = encodePayErc20FeeRequest(request, amount, feeAmountOverride);
--    const pn = (0, payment_detection_1.getPaymentNetworkExtension)(request);
--    const proxyAddress = smart_contracts_1.erc20FeeProxyArtifact.getAddress(request.currencyInfo.network, pn === null || pn === void 0 ? void 0 : pn.version);
-+    const proxyAddress = process.env.REACT_APP_COPRA_REQUEST_PAYMENT_PROCESSOR;
+diff --git a/node_modules/@requestnetwork/payment-processor/dist/payment/eth-fee-proxy.js b/node_modules/@requestnetwork/payment-processor/dist/payment/eth-fee-proxy.js
+index bd11619..c59c53e 100644
+--- a/node_modules/@requestnetwork/payment-processor/dist/payment/eth-fee-proxy.js
++++ b/node_modules/@requestnetwork/payment-processor/dist/payment/eth-fee-proxy.js
+@@ -54,7 +54,7 @@ function prepareEthFeeProxyPaymentTransaction(request, amount, feeAmountOverride
+     const amountToPay = (0, utils_1.getAmountToPay)(request, amount);
+     const feeToPay = feeAmountOverride || ethers_1.BigNumber.from(feeAmount || 0);
+     const encodedTx = encodePayEthFeeProxyRequest(request, amount, feeAmountOverride);
+-    const proxyAddress = (0, utils_1.getProxyAddress)(request, payment_detection_1.EthFeeProxyPaymentDetector.getDeploymentInformation);
++    const proxyAddress = process.env.REACT_APP_COPRA_REQUEST_PAYMENT_PROCESSOR
      return {
          data: encodedTx,
          to: proxyAddress,
