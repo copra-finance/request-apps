@@ -2,6 +2,7 @@ import {
   getErc20Balance,
   hasErc20Approval,
   approveErc20,
+  prepareErc20FeeProxyPaymentTransaction,
 } from "@requestnetwork/payment-processor";
 import { useCallback, useEffect, useState } from "react";
 
@@ -227,23 +228,6 @@ export const PaymentProvider: React.FC = ({ children }) => {
     const payRequest = async () => {
       if (!window.ethereum) return;
 
-      const ABI = [
-        {
-          inputs: [
-            { internalType: "address", name: "tokenAddress", type: "address" },
-            { internalType: "address", name: "", type: "address" },
-            { internalType: "uint256", name: "amount", type: "uint256" },
-            { internalType: "bytes", name: "paymentReference", type: "bytes" },
-            { internalType: "uint256", name: "", type: "uint256" },
-            { internalType: "address", name: "", type: "address" },
-          ],
-          name: "transferFromWithReferenceAndFee",
-          outputs: [],
-          stateMutability: "nonpayable",
-          type: "function",
-        },
-      ];
-
       const paymentProcessorAddress =
         process.env.REACT_APP_COPRA_REQUEST_PAYMENT_PROCESSOR;
 
@@ -252,25 +236,17 @@ export const PaymentProvider: React.FC = ({ children }) => {
 
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const user = provider.getSigner();
-      const paymentProcessor = new ethers.Contract(
-        paymentProcessorAddress,
-        ABI,
-        user
+
+      const { data, value } = prepareErc20FeeProxyPaymentTransaction(
+        request.raw
       );
 
-      const { paymentReference, paymentAddress, feeAddress, feeAmount } =
-        getRequestPaymentValues(request.raw);
-
-      const feeToPay = ethers.BigNumber.from(feeAmount || 0);
-      const tokenAddress = request.raw.currencyInfo.value;
-      const amountToPay = getAmountToPay(request.raw);
-      await paymentProcessor.transferFromWithReferenceAndFee(
-        tokenAddress,
-        paymentAddress,
-        amountToPay,
-        `0x${paymentReference}`,
-        feeToPay,
-        feeAddress
+      return user.sendTransaction(
+        Object.assign({
+          data,
+          to: process.env.REACT_APP_COPRA_REQUEST_PAYMENT_PROCESSOR,
+          value,
+        })
       );
     };
 
