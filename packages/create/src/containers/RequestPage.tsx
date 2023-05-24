@@ -32,6 +32,9 @@ const useStyles = makeStyles(() => ({
   factorizeButton: {
     marginTop: 15,
   },
+  linkButton: {
+    textDecoration: "none",
+  },
 }));
 
 export const RequestNotFound = () => {
@@ -160,12 +163,20 @@ const RequestPageInner = () => {
             ethers.utils.getAddress(account) ===
               ethers.utils.getAddress(request.payee) && (
               <RButton
-                color="default"
+                color="primary"
                 target="_blank"
                 href={process.env.REACT_APP_COPRA_APP_URL}
                 className={classes.factorizeButton}
               >
-                <Typography variant="h4">Factorize Invoice on Copra</Typography>
+                <Typography variant="h4">
+                  <Link
+                    target="_blank"
+                    className={classes.linkButton}
+                    href={process.env.REACT_APP_COPRA_APP_URL}
+                  >
+                    Get Invoice Financing On Copra
+                  </Link>
+                </Typography>
               </RButton>
             )}
         </React.Fragment>
