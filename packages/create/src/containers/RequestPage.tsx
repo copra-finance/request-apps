@@ -31,6 +31,11 @@ const useStyles = makeStyles(() => ({
   },
   factorizeButton: {
     marginTop: 15,
+    background: "rgb(143, 248, 112)",
+    "&:hover a": {
+      color: "#fff",
+      textDecoration: "none",
+    },
   },
   linkButton: {
     textDecoration: "none",
