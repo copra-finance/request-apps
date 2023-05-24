@@ -13,7 +13,10 @@ import { Types } from "@requestnetwork/request-client.js";
 import React from "react";
 import { ethers, BigNumber } from "ethers";
 import axios from "axios";
-import { getRequestPaymentValues } from "@requestnetwork/payment-processor/dist/payment/utils";
+import {
+  getAmountToPay,
+  getRequestPaymentValues,
+} from "@requestnetwork/payment-processor/dist/payment/utils";
 
 export class NotEnoughForGasError extends Error {
   constructor() {
@@ -259,9 +262,12 @@ export const PaymentProvider: React.FC = ({ children }) => {
         getRequestPaymentValues(request.raw);
 
       const feeToPay = ethers.BigNumber.from(feeAmount || 0);
-
+      const tokenAddress = request.raw.currencyInfo.value;
+      const amountToPay = getAmountToPay(request.raw);
       await paymentProcessor.transferFromWithReferenceAndFee(
+        tokenAddress,
         paymentAddress,
+        amountToPay,
         `0x${paymentReference}`,
         feeToPay,
         feeAddress
