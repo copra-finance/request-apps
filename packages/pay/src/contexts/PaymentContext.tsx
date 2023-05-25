@@ -1,8 +1,8 @@
 import {
   getErc20Balance,
-  hasErc20Approval,
-  approveErc20,
   prepareErc20FeeProxyPaymentTransaction,
+  checkErc20Allowance,
+  encodeApproveAnyErc20,
 } from "@requestnetwork/payment-processor";
 import { useCallback, useEffect, useState } from "react";
 
@@ -14,10 +14,6 @@ import { Types } from "@requestnetwork/request-client.js";
 import React from "react";
 import { ethers, BigNumber } from "ethers";
 import axios from "axios";
-import {
-  getAmountToPay,
-  getRequestPaymentValues,
-} from "@requestnetwork/payment-processor/dist/payment/utils";
 
 export class NotEnoughForGasError extends Error {
   constructor() {
@@ -66,10 +62,16 @@ const runChecks = async (
         return new NotEnoughForGasError();
       }
       if (!approved) {
-        const approval = await hasErc20Approval(
-          request,
+        if (!window.ethereum) throw new Error("Window Ethereum not detected");
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const user = provider.getSigner();
+
+        const approval = await checkErc20Allowance(
           account,
-          library as any
+          process.env.REACT_APP_COPRA_REQUEST_PAYMENT_PROCESSOR || "",
+          user,
+          request.currencyInfo.value,
+          request.expectedAmount
         );
         if (!approval) {
           return new RequiresApprovalError();
@@ -282,7 +284,26 @@ export const PaymentProvider: React.FC = ({ children }) => {
     if (active) return;
     setActive(true);
 
-    approveErc20(request.raw, library as any)
+    const approveERC20 = async () => {
+      if (!window.ethereum) return;
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const user = provider.getSigner();
+      const encodedTxn = encodeApproveAnyErc20(
+        request.raw.currencyInfo.value,
+        process.env.REACT_APP_COPRA_REQUEST_PAYMENT_PROCESSOR || "",
+        user
+      );
+
+      const tokenAddress = request.raw.currencyInfo.value;
+
+      return await user.sendTransaction({
+        data: encodedTxn,
+        to: tokenAddress,
+        value: 0,
+      });
+    };
+
+    approveERC20()
       .then(async () => {
         setBroadcasting(true);
         setApproved(true);
