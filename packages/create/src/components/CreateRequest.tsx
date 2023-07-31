@@ -180,6 +180,13 @@ const CurrencyPicker = ({ className }: { className?: string }) => {
   const { chainId } = useWeb3React();
   const { currencyManager } = useCurrency();
 
+  const currencyElems = getCurrenciesForPicker({
+    currencyFilter: ({ network }) => chainId === 5 || network !== "goerli",
+  }).filter(elems => (elems[0] as any).key === "matic")
+
+
+  currencyElems[0][2] = (currencyElems[0][2] as any[]).filter((elem) => elem.key === "USDC-matic" || elem.key === "USDT-matic")
+
   return (
     <TextField
       {...field}
@@ -205,9 +212,7 @@ const CurrencyPicker = ({ className }: { className?: string }) => {
         },
       }}
     >
-      {getCurrenciesForPicker({
-        currencyFilter: ({ network }) => chainId === 5 || network !== "goerli",
-      })}
+      {currencyElems}
     </TextField>
   );
 };
