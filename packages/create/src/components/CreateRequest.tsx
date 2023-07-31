@@ -177,6 +177,7 @@ const Amount = ({ className }: { className?: string }) => {
 
 const CurrencyPicker = ({ className }: { className?: string }) => {
   const [field, meta] = useField("currency");
+  
   const { chainId } = useWeb3React();
   const { currencyManager } = useCurrency();
 
@@ -396,7 +397,7 @@ export const CreateRequestForm = ({
         onSubmit={onSubmit}
         enableReinitialize
         initialValues={{
-          currency: !network || network === 5 ? "FAU-goerli" : "DAI-mainnet",
+          currency: !network || network === 5 ? "FAU-goerli" : "USDC-matic",
           amount: "" as any,
           payer: "",
           reason: "",
