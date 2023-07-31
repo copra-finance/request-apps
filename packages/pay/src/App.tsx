@@ -11,7 +11,7 @@ import PaymentPage from "./containers/PaymentPage";
 //@ts-ignore
 import { ReceiptPreview } from "request-ui";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   paper: {
     display: "flex",
     flexDirection: "column",
@@ -43,7 +43,8 @@ const App: React.FC = () => {
                     path="/"
                     exact
                     component={() => {
-                      window.location.href = "https://create.request.network";
+                      window.location.href =
+                        "https://copra-request-apps-create.vercel.app/";
                       return null;
                     }}
                   />
