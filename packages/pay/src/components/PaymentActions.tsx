@@ -52,7 +52,7 @@ const PayAction = ({
     </RButton>
   );
 };
-const useApproveStyles = makeStyles(theme => ({
+const useApproveStyles = makeStyles((theme) => ({
   square: {
     borderRadius: 0,
     [theme.breakpoints.up("sm")]: {
@@ -234,7 +234,7 @@ const PaymentActions = () => {
           </Typography>
           <Spacer />
           <Link
-            href="https://create.request.network"
+            href="https://copra-request-apps-create.vercel.app/"
             target="_blank"
             underline="always"
             color="secondary"
@@ -266,7 +266,7 @@ const PaymentActions = () => {
     return (
       <ConnectAction
         activate={() => activateConnector("injected")}
-        mobileRedirect={async name => {
+        mobileRedirect={async (name) => {
           let url;
           if (name === "coinbase") {
             url = await coinbaseShare(request.requestId);

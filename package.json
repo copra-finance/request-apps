@@ -8,5 +8,14 @@
       "packages/create",
       "packages/pay"
     ]
+  },
+  "scripts": {
+    "start:pay": "yarn --cwd packages/pay start",
+    "start:create": "yarn --cwd packages/create start",
+    "dev": "npm-run-all --parallel start:pay start:create",
+    "postinstall": "patch-package"
+  },
+  "devDependencies": {
+    "yarn-run-all": "^3.1.1"
   }
 }

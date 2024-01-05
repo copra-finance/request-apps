@@ -177,8 +177,16 @@ const Amount = ({ className }: { className?: string }) => {
 
 const CurrencyPicker = ({ className }: { className?: string }) => {
   const [field, meta] = useField("currency");
+  
   const { chainId } = useWeb3React();
   const { currencyManager } = useCurrency();
+
+  const currencyElems = getCurrenciesForPicker({
+    currencyFilter: ({ network }) => chainId === 5 || network !== "goerli",
+  }).filter(elems => (elems[0] as any).key === "matic")
+
+
+  currencyElems[0][2] = (currencyElems[0][2] as any[]).filter((elem) => elem.key === "USDC-matic" || elem.key === "USDT-matic")
 
   return (
     <TextField
@@ -205,9 +213,7 @@ const CurrencyPicker = ({ className }: { className?: string }) => {
         },
       }}
     >
-      {getCurrenciesForPicker({
-        currencyFilter: ({ network }) => chainId === 5 || network !== "goerli",
-      })}
+      {currencyElems}
     </TextField>
   );
 };
@@ -250,8 +256,8 @@ const PaymentAddress = ({ className }: { className?: string }) => {
   return (
     <TextField
       {...field}
-      label="Where do you want to receive the funds?"
-      placeholder="Enter an ENS name or ETH address"
+      disabled={true}
+      label="Invoice will be paid to the Copra Request Income Verifier"
       fullWidth
       className={className}
       error={Boolean(meta.error)}
@@ -262,7 +268,7 @@ const PaymentAddress = ({ className }: { className?: string }) => {
 
 const Body = () => {
   const classes = useBodyStyles();
-  const [advancedOpen, setAdvancedOpen] = React.useState(false);
+
   return (
     <Box className={classes.container}>
       <Box display="flex" flexDirection="row">
@@ -277,24 +283,9 @@ const Body = () => {
       <Payer className={classes.field} />
       <Reason className={classes.field} />
       <Box>
-        <Button
-          variant="text"
-          className={classes.advancedButton}
-          classes={{ label: classes.advancedButtonLabel }}
-          onClick={() => setAdvancedOpen(!advancedOpen)}
-        >
-          {advancedOpen ? (
-            <ExpandMoreIcon fontSize="small" />
-          ) : (
-            <ChevronRightIcon fontSize="small" />
-          )}{" "}
-          <Typography variant="body1">Advanced</Typography>
-        </Button>
-        {advancedOpen && (
-          <Box mt={2}>
-            <PaymentAddress className={classes.field} />
-          </Box>
-        )}
+        <Box mt={2}>
+          <PaymentAddress className={classes.field} />
+        </Box>
       </Box>
     </Box>
   );
@@ -406,11 +397,11 @@ export const CreateRequestForm = ({
         onSubmit={onSubmit}
         enableReinitialize
         initialValues={{
-          currency: !network || network === 5 ? "FAU-goerli" : "DAI-mainnet",
+          currency: !network || network === 5 ? "FAU-goerli" : "USDC-matic",
           amount: "" as any,
           payer: "",
           reason: "",
-          paymentAddress: account,
+          paymentAddress: process.env.REACT_APP_COPRA_REQUEST_VERIFIER,
         }}
       >
         <>

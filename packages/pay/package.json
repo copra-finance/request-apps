@@ -15,6 +15,7 @@
     "email-validator": "^2.0.4",
     "eslint-config-react-app": "^6.0.0",
     "ethers": "5.5.1",
+    "patch-package": "^7.0.0",
     "qrcode.react": "^1.0.0",
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
@@ -42,7 +43,8 @@
     "start": "react-scripts start",
     "build": "NODE_OPTIONS=--max_old_space_size=8192 react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "postinstall": "patch-package"
   },
   "eslintConfig": {
     "root": true,

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { makeStyles, Typography } from "@material-ui/core";
+import { Link, makeStyles, Typography } from "@material-ui/core";
 import { useWeb3React } from "@web3-react/core";
 import {
   RContainer,
@@ -22,11 +22,23 @@ import ShareRequest from "../components/ShareRequest";
 import ErrorPage from "./ErrorPage";
 import { useConnectedUser } from "../contexts/UserContext";
 import NotLoggedPage from "./NotLoggedPage";
+import { ethers } from "ethers";
 
 const useStyles = makeStyles(() => ({
   cancel: {
     color: "#DE1C22",
     border: "1px solid #E4E4E4",
+  },
+  factorizeButton: {
+    marginTop: 15,
+    background: "rgb(143, 248, 112)",
+    "&:hover a": {
+      color: "#fff",
+      textDecoration: "none",
+    },
+  },
+  linkButton: {
+    textDecoration: "none",
   },
 }));
 
@@ -54,6 +66,7 @@ const RequestActions = ({
     await cancel();
     setCancelling(false);
   };
+
   const classes = useStyles();
   account = account?.toLowerCase();
   if (
@@ -80,13 +93,10 @@ const RequestActions = ({
 const RequestPageInner = () => {
   const { account, chainId } = useWeb3React();
 
-  const {
-    request,
-    loading,
-    update,
-    counterCurrency,
-    counterValue,
-  } = useRequest();
+  const { request, loading, update, counterCurrency, counterValue } =
+    useRequest();
+
+  const classes = useStyles();
 
   const cancel = async () => {
     if (!request || !account || !chainId) {
@@ -114,6 +124,7 @@ const RequestPageInner = () => {
   if (!request) {
     return <RequestNotFound />;
   }
+
   return (
     <RContainer>
       <Spacer size={15} xs={8} />
@@ -149,11 +160,31 @@ const RequestPageInner = () => {
           <ShareRequest requestId={request.requestId} />
         </>
       ) : (
-        <>
+        <React.Fragment>
           <ShareRequest requestId={request.requestId} />
           <Spacer size={11} />
           <RequestActions request={request} account={account} cancel={cancel} />
-        </>
+          {!!account &&
+            ethers.utils.getAddress(account) ===
+              ethers.utils.getAddress(request.payee) && (
+              <RButton
+                color="primary"
+                target="_blank"
+                href={process.env.REACT_APP_COPRA_APP_URL}
+                className={classes.factorizeButton}
+              >
+                <Typography variant="h4">
+                  <Link
+                    target="_blank"
+                    className={classes.linkButton}
+                    href={process.env.REACT_APP_COPRA_APP_URL}
+                  >
+                    Get Invoice Financing On Copra
+                  </Link>
+                </Typography>
+              </RButton>
+            )}
+        </React.Fragment>
       )}
       <Spacer size={12} />
     </RContainer>
